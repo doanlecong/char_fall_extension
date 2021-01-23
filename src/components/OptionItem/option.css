@@ -1,0 +1,22 @@
+.option_selects {
+    width: 100%;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 5px 5px;
+}
+.button_option {
+    background-color: gray;
+    border: 1px solid whitesmoke;
+    color: inherit;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: calc(10px + 2vmin);
+    text-align: center;
+}
+
+.button_option.active {
+    background-color: goldenrod;
+    color: dodgerblue;
+    border-color: rgb(10, 54, 99);
+    font-size: calc(10px + 3vmin);
+}
