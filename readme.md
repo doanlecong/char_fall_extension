@@ -1,7 +1,9 @@
-# Chrome Extension boilerplate created with React Typescript
+# Just a simple extension with raining effect
+## Using React To build UI and functionalities . 
+
+## You can use, modify this project as you need or you can create your own by following below steps !
 
 ## Getting started
-
 Create a project based on this boilerplate.
 
 ```
@@ -27,3 +29,5 @@ After the project has been built, a directory named `dist` has been created. You
 3. Enable _Developer mode_.
 4. Click _Load unpacked_.
 5. Select the `dist` directory.
+
+
