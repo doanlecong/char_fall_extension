@@ -1,0 +1,21 @@
+#solid-background {
+    padding: 5px;
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-gap: 5px;
+}
+
+#solid-background .item-background {
+    border: 1px solid white;
+    width: auto;
+    min-width: 30px;
+    min-height: 30px;
+    cursor: pointer;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.img_check_box {
+    width: 20px;
+}

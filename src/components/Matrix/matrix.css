@@ -1,0 +1,14 @@
+.maxtrix_container {
+    position: static;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    pointer-events: none;
+    background-color: rgba(0, 0, 0, 0.288);   
+    background-color: transparent;
+}
+
+.matrix_render {
+    pointer-events: none;
+}

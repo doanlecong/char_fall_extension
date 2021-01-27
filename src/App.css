@@ -1,3 +1,11 @@
+#popup {
+  background-color: #13171f;
+}
+
+.Main {
+  display: grid;
+  grid-template-columns: auto auto;
+}
 .App {
   text-align: center;
 }
@@ -8,6 +16,12 @@
   margin-bottom: 5px;
 }
 
+.App-night-icon {
+  height: 18vmin;
+  pointer-events: none;
+  margin-bottom: 3px;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
@@ -15,7 +29,6 @@
 }
 
 .App-header {
-  background-color: #13171f;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -39,7 +52,16 @@
   }
 }
 
-.App-header .author {
+.author_p {
+  margin: 0px !important;
+  padding: 5px;
+  color: whitesmoke;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.author {
   text-decoration: none;
   color: azure;
 }

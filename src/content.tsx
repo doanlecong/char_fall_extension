@@ -3,6 +3,7 @@ import * as React from "react";
 import * as ReactDOM from "react-dom";
 import {MessageType, REQ_SNOW_STATUS, SNOW_CHANGE, SNOW_RESPONSE, SET_NUM_ITEM} from "./type";
 import "./content.css";
+import Matrix from "./components/Matrix";
 
 const body = document.getElementsByTagName("body");
 const snowflakesContainer = document.createElement('div');
@@ -10,8 +11,6 @@ snowflakesContainer.id = "effect_container";
 snowflakesContainer.className = "snowflakes";
 snowflakesContainer.setAttribute('aria-hidden',"true");
 body[0]?.prepend(snowflakesContainer);
-
-
 
 const EffectItems = (numItem = 12,charRender = '💏') => {
   let content : any = [];
@@ -22,7 +21,6 @@ const EffectItems = (numItem = 12,charRender = '💏') => {
 
   return content;
 }
-
 
 const effectContainer = document.getElementById("effect_container");
 const EffectContainer = () => {
@@ -65,6 +63,7 @@ const EffectContainer = () => {
   return  (
     <>
       {snowing ? EffectItems(numItem,charRender) : ''}
+      {/* {snowing ? <Matrix/> : ""} */}
     </>
   );
 };

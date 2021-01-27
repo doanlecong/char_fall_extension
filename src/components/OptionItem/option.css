@@ -12,6 +12,7 @@
     padding: 5px;
     font-size: calc(10px + 2vmin);
     text-align: center;
+    cursor: pointer;
 }
 
 .button_option.active {
