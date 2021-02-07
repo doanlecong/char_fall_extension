@@ -1,0 +1,66 @@
+#gradient-background {
+
+}
+#gradient-background .info-guild {
+    font-size: small;
+    margin-bottom: 3px;
+    margin-top: -6px;
+    text-decoration: underline;
+    text-align: left;
+}
+
+.direction {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    align-self: stretch;
+    padding-bottom: 5px;
+}
+
+.direction .direct-button {
+    min-width: 30px;
+    min-height: 30px;
+    margin-right: 1px;
+    color: white;
+    background: transparent;
+    border: 1px solid white;
+    font-size: 11px;
+    font-weight: bold;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.direction .direct-button.active {
+    background-color: white;
+    color: black;
+}
+
+#gradient-background .color-picker-list {
+    display: grid;
+    grid-template-columns: auto auto auto;
+    grid-column-gap: 5px;
+    padding-bottom: 5px;
+}
+#gradient-background .color-picker-list .color_item {
+    border: 1px solid white;
+    border-radius: 12px;
+    color: whitesmoke;
+    min-height: 20px;
+}
+
+#gradient-background .color-picker-list .btn_color_picker {
+    border: 1px solid rgb(224, 224, 224);
+    border-radius: 20px;
+    font-weight: bold;
+    color: black;
+    min-height: 25px;
+    font-size: small;
+    font-family: monospace;
+}
+
+#gradient-background .background-preview {
+    border: 1px solid white;
+    width: 100%;
+    height: 100px;
+    max-width: 252px;
+}

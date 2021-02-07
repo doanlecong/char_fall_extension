@@ -4,7 +4,7 @@ import checkBox from "../../check_box.svg";
 
 
 interface SolidBackgroundInterface {
-
+    returnData : (...args : [any]) => any
 }
 
 interface ColorObj {
@@ -13,7 +13,7 @@ interface ColorObj {
     b :number
 }
 
-const SolidBackground = ({}: SolidBackgroundInterface) => {
+const SolidBackground = ({returnData} : SolidBackgroundInterface) => {
     const [color , setColor] = React.useState({r : 0, g : 0, b : 0});
     const [itemBgSelect, setItemBgSelect] = React.useState("");
 
@@ -25,6 +25,7 @@ const SolidBackground = ({}: SolidBackgroundInterface) => {
     const handleSelectBackgroundColor = (itemSelect: string,r : number, g:number, b:number) => {
         setColor({r : r, g : g, b : b});
         setItemBgSelect(itemSelect);
+        returnData({colorId : itemSelect, colorData : {redCode : r, greenCode : g, blueCode : b}});
     }
 
     const showCheckBox = (itemBg: string) => {

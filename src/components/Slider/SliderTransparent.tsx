@@ -14,6 +14,9 @@ const style =  {
         fontSize: "10px",
         color : "#c0c5ce",
     },
+    marginRight : {
+        marginRight:"-18px"
+    }
 }
 
 
@@ -22,6 +25,7 @@ const SliderTransparent = ({min = 10, max = 100, curr= 50, returnData} : SliderT
     const [value, setValue] = React.useState(curr);
     let currSliderVal = 0;
     React.useEffect(() => {
+        //console.log("Slider Change");
         returnData(value);
     }, [value])
 
@@ -39,7 +43,7 @@ const SliderTransparent = ({min = 10, max = 100, curr= 50, returnData} : SliderT
                     step={1}
                     onChange={(e) => {currSliderVal = parseInt(e.target.value); handleChange();}}/>
             </div>
-            <div className="slider-info">
+            <div className="slider-info" style={style.marginRight}>
                 <div className="min-val">
                     <div style={style.smallText}>Min</div>
                     <div>{min}</div>

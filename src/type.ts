@@ -10,6 +10,11 @@ const GET_CURRENT_NUM_ITEM: string = "GET_CURRENT_NUM_ITEM";
 const SET_NUM_ITEM: string = "SET_NUM_ITEM";
 
 
+// Background Data 
+const GET_BACKGROUND_DATA : string = "GET_BACKGROUND_DATA";
+const CHANGE_BACKGROUND_DATA : string = "CHANGE_BACKGROUND_DATA";
+const GET_BACKGROUND_DATA_CONTENT : string = "GET_BACKGROUND_DATA_CONTENT";
+
 interface SnowRequest {
     type : "REQ_SNOW_STATUS";
     snowing: boolean;
@@ -55,10 +60,21 @@ interface GetNumberItem {
 
 }
 
+interface GetDataBackground {
+    type : string,
+    data : any,
+}
+
+interface ChangeBackgroundData {
+    type : string,
+    data : any
+}
 
 
 export type MessageType = SnowRequest | SnowResponse | SnowToggle | SnowChange | GetNumberItem;
 export {REQ_SNOW_STATUS, SNOW_RESPONSE, SNOW_TOGGLE, SNOW_CHANGE, GET_EFFECT_ITEM, GET_CURRENT_NUM_ITEM, SET_NUM_ITEM };
 export type EffectMesType = GetItemEffect | SnowChange;
+export { GET_BACKGROUND_DATA , CHANGE_BACKGROUND_DATA, GET_BACKGROUND_DATA_CONTENT };
+export type BackgroundData = GetDataBackground | ChangeBackgroundData;
 
 

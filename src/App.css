@@ -65,3 +65,14 @@
   text-decoration: none;
   color: azure;
 }
+button:active {
+  outline: none;
+}
+
+button:focus {
+  outline: none;
+}
+
+button::-moz-focus-inner {
+  outline: none;
+}

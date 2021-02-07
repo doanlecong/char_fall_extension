@@ -32,3 +32,11 @@
     transform: background-color 0.2s;
 }
 
+
+#active_btn {
+    border-radius: 15px;
+}
+
+#active_btn.active {
+    background-color: #00c0da;
+}

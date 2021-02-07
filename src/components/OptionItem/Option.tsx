@@ -3,7 +3,7 @@ import {MessageType, EffectMesType, SNOW_CHANGE, GET_EFFECT_ITEM, REQ_SNOW_STATU
 import "./option.css";
 
 
-const arrOption = ['♥','😘','💋','🎶','❄','🎄','🎉','👻', '❅','☁'];
+const arrOption = ['♥','😘','💋','🎶','❄','🎄','🎉','👻', '❅','☁','💕','🎼'];
 
 const EffectPayload = (item = '') => {
     return {

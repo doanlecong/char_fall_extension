@@ -1,0 +1,30 @@
+.hidden {
+    display: none;
+}
+
+.expandInDown {
+    animation-name: expandInDown;
+    animation-iteration-count: 1;
+    animation-duration: .3s;
+    animation-delay: 0s;
+    animation-timing-function: cubic-bezier(.23,1,.32,1);
+    animation-fill-mode: both;
+    backface-visibility: hidden;
+}
+  
+  @keyframes expandInDown {
+    0% {
+      opacity: 0;
+      -ms-transform: scaleY(0);
+      transform: scaleY(0);
+      -ms-transform-origin: left top 0;
+      transform-origin: left top 0;
+    }
+    100% {
+      opacity: 1;
+      -ms-transform: scaleY(1);
+      transform: scaleY(1);
+      -ms-transform-origin: left top 0;
+      transform-origin: left top 0;
+    }
+}

@@ -1,9 +1,11 @@
 // This file is injected as a content script
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {MessageType, REQ_SNOW_STATUS, SNOW_CHANGE, SNOW_RESPONSE, SET_NUM_ITEM} from "./type";
+import {MessageType, REQ_SNOW_STATUS, SNOW_CHANGE, SNOW_RESPONSE, SET_NUM_ITEM, BackgroundData, GET_BACKGROUND_DATA, GET_BACKGROUND_DATA_CONTENT} from "./type";
 import "./content.css";
-import Matrix from "./components/Matrix";
+import { DataGradient, DataSolid } from "./components/Background";
+import BackgroundContent from "./components/BackgroundContent";
+// import Matrix from "./components/Matrix";
 
 const body = document.getElementsByTagName("body");
 const snowflakesContainer = document.createElement('div');
@@ -24,13 +26,18 @@ const EffectItems = (numItem = 12,charRender = '💏') => {
 
 const effectContainer = document.getElementById("effect_container");
 const EffectContainer = () => {
-  const [snowing, setSnowing] = React.useState(false); 
+  const [snowing, setSnowing]       = React.useState(false); 
   const [charRender, setCharRender] = React.useState("");
-  const [numItem, setNumItem] = React.useState(12);
+  const [numItem, setNumItem]       = React.useState(12);
+  const [activeBg, setActiveBg]     = React.useState(false);
+  const [dataColorBg, setDataColorBg] = React.useState<DataGradient | DataSolid | null| undefined>(null);
+  const [typeBg, setTypeBg] = React.useState('solid_tab');
+  const [transparentIndex, setTransparent] = React.useState(50);
 
   React.useEffect(() => {
     console.log("CONTENT RUNNING !");
     chrome.runtime.sendMessage({type : REQ_SNOW_STATUS});
+    chrome.runtime.sendMessage({type : GET_BACKGROUND_DATA_CONTENT});
     chrome.runtime.onMessage.addListener((message : MessageType) => {
       console.log(message);
       switch(message.type) {
@@ -58,11 +65,38 @@ const EffectContainer = () => {
             break;
       }
     });
-  }, [])
+
+    chrome.runtime.onMessage.addListener((message : BackgroundData) => {
+      switch(message.type) {
+        case GET_BACKGROUND_DATA_CONTENT:
+          const data = message.data;
+          if(data.active) {
+            console.log(data.active);
+            setActiveBg(() => data.active);
+          }
+
+          if(data.dataColor) {
+            setDataColorBg(() => data.dataColor);
+          }
+
+          if(data.transNum) {
+            setTransparent(() => data.transNum);
+          }
+
+          if(data.tab) {
+            setTypeBg(() => data.tab);
+          }
+          break;
+        default: 
+          break;
+      }
+    });
+  }, []);
  
   return  (
     <>
       {snowing ? EffectItems(numItem,charRender) : ''}
+      {activeBg ? <BackgroundContent tab={typeBg} transparent={transparentIndex} dataColor={dataColorBg} active={activeBg} /> : ""}
       {/* {snowing ? <Matrix/> : ""} */}
     </>
   );
