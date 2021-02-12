@@ -17,23 +17,18 @@ interface DataReceive {
 
 const App = () => {
 
-  const [tab, setTab] = React.useState("solid_tab");
-  const [transNum, setTransNum] = React.useState(50);
-  const [activeBg, setActiveBg] = React.useState(false);
-  const [dataColor, setDataColor] = React.useState<DataGradient | DataSolid | null | undefined>(null);
+  const [dataReceive, setDataReceive] = React.useState<DataReceive>({
+    tab : "solid_tab",
+    active : false,
+    transparent: 50,
+    dataColor: null,
+  });
   
   const sendDataToBAckgroundProcess = () => {
     // Tong hop data can thiet de gui lai background 
-    const dataBackgroundChange = {
-      tab : tab,
-      transNum : transNum,
-      active : activeBg,
-      dataColor : dataColor,
-    }
-
     chrome.runtime.sendMessage({
       type : CHANGE_BACKGROUND_DATA,
-      data : dataBackgroundChange,
+      data : dataReceive,
     });
 
     console.log('Data Change');
@@ -46,20 +41,7 @@ const App = () => {
       switch(message.type) {
         case GET_BACKGROUND_DATA : 
           let data = message.data;
-          if(data.tab) {
-            setTab(() => data.tab);
-          }
-          if(data.transNum) {
-            setTransNum(() => data.transNum);
-          }
-
-          if(data.active) {
-            setActiveBg(() => data.active);
-          }
-
-          if(data.color) {
-            setDataColor(() => data.dataColor);
-          }
+          setDataReceive(() => data);
           break;
         default:
           break;
@@ -68,17 +50,22 @@ const App = () => {
   }, []);
 
 
-  React.useMemo(() => {sendDataToBAckgroundProcess()}, [{tab, transNum, dataColor, activeBg}]);
+  React.useMemo(() => {sendDataToBAckgroundProcess()}, [dataReceive]);
 
   const handleReceiveData = ({tab, active, transparent, dataColor} : DataReturn) => {
     //console.log(tab, transparent, dataColor, active);
-    setTab(() => tab);
-    setTransNum(() => transparent);
-    setDataColor(() => dataColor);
-    setActiveBg(() => active);
+    const dataReceive = {
+      tab: tab,
+      transparent : transparent,
+      active: active,
+      dataColor : dataColor,
+
+    };
+    setDataReceive(() => dataReceive);
   }
 
   return (
+    
     <>
       <div className="Main">
         <div className="App">
@@ -93,7 +80,7 @@ const App = () => {
           <header className="App-header">
             <img src={night_icon} className="App-night-icon" alt="logo" />
           </header>
-          <Background tabSelect={tab} active={activeBg} dataChosen={dataColor} transNum={transNum} returnData={handleReceiveData}/>
+          <Background tabSelect={dataReceive.tab} active={dataReceive.active} dataChosen={dataReceive.dataColor} transNum={dataReceive.transparent} returnData={handleReceiveData}/>
         </div>
       </div>
       <p className="author_p">Author : <b><a className="author" href="https://doanlee.com" target="_blank">Doan Le</a></b></p>

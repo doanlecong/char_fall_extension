@@ -42,7 +42,7 @@ chrome.storage.local.get('data_background', (res) => {
         // set default data background
         dataBackground = {
             tab : "solid_tab",
-            transNum : 50,
+            transparent : 50,
             active : false,
             dataColor : null,
         }    
