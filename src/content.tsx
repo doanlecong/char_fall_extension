@@ -1,10 +1,24 @@
 // This file is injected as a content script
 import * as React from "react";
 import * as ReactDOM from "react-dom";
-import {MessageType, REQ_SNOW_STATUS, SNOW_CHANGE, SNOW_RESPONSE, SET_NUM_ITEM, BackgroundData, GET_BACKGROUND_DATA, GET_BACKGROUND_DATA_CONTENT} from "./type";
+
 import "./content.css";
 import { DataGradient, DataSolid } from "./components/Background";
 import BackgroundContent from "./components/BackgroundContent";
+import {
+  MessageType,
+  REQ_SNOW_STATUS,
+  SNOW_CHANGE,
+  SNOW_RESPONSE,
+  SET_NUM_ITEM, 
+  BackgroundData, 
+  GET_BACKGROUND_DATA, 
+  GET_BACKGROUND_DATA_CONTENT, 
+  GET_INITIAL_DATA_CONTENT,
+  CHANGE_EFFECT_DATA,
+  CHANGE_BACKGROUND_DATA
+} from "./type";
+
 // import Matrix from "./components/Matrix";
 
 const body = document.getElementsByTagName("body");
@@ -22,12 +36,12 @@ interface DataReceive {
 }
 
 interface DataEffect {
-  snowing : boolean,
-  charRender: string,
+  activeEffect : boolean,
+  currentItem: string,
   numItem : number,
 }
 
-const EffectItems = (numItem = 12,charRender = '💏') => {
+const EffectItems = (numItem = 12, charRender = '💏') => {
   let content : any = [];
 
   for(let i = 0; i < numItem; i++) {
@@ -44,8 +58,8 @@ const EffectContainer = () => {
   //const [charRender, setCharRender] = React.useState("");
   //const [numItem, setNumItem]       = React.useState(12);
   const [dataEffect, setDataEffect] = React.useState<DataEffect>({
-    snowing : false,
-    charRender: "💏",
+    activeEffect : false,
+    currentItem: "💏",
     numItem : 12,
   });
   
@@ -55,54 +69,32 @@ const EffectContainer = () => {
     transparent: 50,
     dataColor: null,
   });
+
   React.useEffect(() => {
     console.log("CONTENT RUNNING !");
-    chrome.runtime.sendMessage({type : REQ_SNOW_STATUS});
-    chrome.runtime.sendMessage({type : GET_BACKGROUND_DATA_CONTENT});
-    chrome.runtime.onMessage.addListener((message : MessageType) => {
+    chrome.runtime.sendMessage({type : GET_INITIAL_DATA_CONTENT});
+    chrome.runtime.onMessage.addListener((message : {type : string, data :any}) => {
       console.log(message);
-      let dataChange = dataEffect;
-
       switch(message.type) {
-        case SNOW_RESPONSE:
-          dataChange.snowing = message.snowing;
-          //setSnowing(() => message.snowing);
-          if(message.item) {
-            dataChange.charRender = message.item;
-            //setCharRender(() => message.item);
-          }
-          if(message.num_item) {
-            dataChange.numItem = message.num_item;
-            //setNumItem(() => message.num_item);
-          }
-          break;
-        case SNOW_CHANGE: 
-          if(message.item && dataEffect.charRender != message.item) {
-            dataChange.charRender = message.item;
-            //setCharRender(() => message.item);
-          }
+        case GET_INITIAL_DATA_CONTENT : 
+          let dataRe = message.data;
+          ReactDOM.unstable_batchedUpdates(() => {
+            if(dataRe.dataEffect) {
+              setDataEffect(() => dataRe.dataEffect);
+            }
 
-          if(message.snowing) {
-            dataChange.snowing = message.snowing;
-            //setSnowing(message.snowing);
-          }
+            if(dataRe.dataBackground) {
+              setDataReceiveBg(() => dataRe.dataBackground);
+            }
+          });
           break;
-        case SET_NUM_ITEM: 
-          
-        default: 
+        case CHANGE_EFFECT_DATA :
+          setDataEffect(() => message.data);
           break;
-      }
-
-      setDataEffect(() => dataChange);
-    });
-
-    chrome.runtime.onMessage.addListener((message : BackgroundData) => {
-      switch(message.type) {
-        case GET_BACKGROUND_DATA_CONTENT:
-          const data = message.data;
-          setDataReceiveBg(() => data);
+        case CHANGE_BACKGROUND_DATA: 
+          setDataReceiveBg(() => message.data);
           break;
-        default: 
+        default:
           break;
       }
     });
@@ -110,7 +102,7 @@ const EffectContainer = () => {
  
   return  (
     <>
-      {dataEffect.snowing ? EffectItems(dataEffect.numItem,dataEffect.charRender) : ''}
+      {dataEffect.activeEffect ? EffectItems(dataEffect.numItem,dataEffect.currentItem) : ''}
       {dataReceiveBg.active ? <BackgroundContent tab={dataReceiveBg.tab} 
                     transparent={dataReceiveBg.transparent} 
                     dataColor={dataReceiveBg.dataColor} 

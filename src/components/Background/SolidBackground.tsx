@@ -4,6 +4,7 @@ import checkBox from "../../check_box.svg";
 
 
 interface SolidBackgroundInterface {
+    dataChosen : any,
     returnData : (...args : [any]) => any
 }
 
@@ -13,9 +14,25 @@ interface ColorObj {
     b :number
 }
 
-const SolidBackground = ({returnData} : SolidBackgroundInterface) => {
-    const [color , setColor] = React.useState({r : 0, g : 0, b : 0});
-    const [itemBgSelect, setItemBgSelect] = React.useState("");
+const SolidBackground = ({dataChosen, returnData} : SolidBackgroundInterface) => {
+    
+    let intialColor = {
+        r : 0,
+        g : 0,
+        b : 0,
+    }
+    let initItemBg = '';
+    if(dataChosen && dataChosen.colorId && dataChosen.colorData) {
+        initItemBg = dataChosen.colorId;
+        intialColor = {
+            r : dataChosen.colorData.redCode,
+            g : dataChosen.colorData.greenCode,
+            b : dataChosen.colorData.blueCode,
+        }
+    }
+
+    const [color , setColor] = React.useState(intialColor);
+    const [itemBgSelect, setItemBgSelect] = React.useState(initItemBg);
 
     React.useEffect(() => {
         //console.log({color, itemBgSelect});

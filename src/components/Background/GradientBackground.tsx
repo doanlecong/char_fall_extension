@@ -1,8 +1,10 @@
 import * as React from "react";
+import { unstable_batchedUpdates } from "react-dom";
 import ColorPicker from "../ColorPicker/ColorPicker";
 import "./gradient.css";
 
 interface Props {
+    dataChosen : any,
     returnData : (...args : [any]) => any;
 }
 
@@ -45,16 +47,36 @@ const directionArr = [
     }
 ]
 
-const GradientBackground = ({returnData} : Props) => {
-    const [direction, setDirection] = React.useState({direct : "", mean :""});
+const GradientBackground = ({dataChosen, returnData} : Props) => {
+
+    let initDirection = {direct: "", mean : ""};
+    let colrInit1 = {redCode : 51, greenCode : 153, blueCode: 255};
+    let colrInit2 = {redCode : 51, greenCode : 204, blueCode: 51};
+    let colrInit3 = {redCode : 204, greenCode : 102, blueCode: 255};
+
+    if(dataChosen && dataChosen.colorRoot && dataChosen.direction) {
+        initDirection = dataChosen.direction;
+        colrInit1 = dataChosen.colorRoot.color1;
+        colrInit2 = dataChosen.colorRoot.color2;
+        colrInit3 = dataChosen.colorRoot.color3;
+    }
+
+    const [firstRender, setFirstRender] = React.useState(true);
+    const [direction, setDirection] = React.useState(initDirection);
     const [currentSelect, setCurrentSelect] = React.useState(1);
 
 
-    const [colorInit1, setColor1] = React.useState({redCode : 51, greenCode : 153, blueCode : 255});
-    const [colorInit2, setColor2] = React.useState({redCode : 51, greenCode : 204, blueCode : 51});
-    const [colorInit3, setColor3] = React.useState({redCode : 204, greenCode : 102, blueCode : 255});
+    const [colorInit1, setColor1] = React.useState(colrInit1);
+    const [colorInit2, setColor2] = React.useState(colrInit2);
+    const [colorInit3, setColor3] = React.useState(colrInit3);
 
     React.useEffect(() => {
+        if(firstRender) {
+            unstable_batchedUpdates(() => {
+                setFirstRender(false);
+            })
+            return;
+        }
         let dataFromColorSet = generateColorSet(colorInit1, colorInit2, colorInit3);
         // console.log(dataFromColorSet);
         returnData(dataFromColorSet);
@@ -82,7 +104,6 @@ const GradientBackground = ({returnData} : Props) => {
                 blueCode : Math.floor((colorSecond.blueCode * ((100 -(5 - i) * 20) /100 ) + colorFirst.blueCode * ((100 - i*20) / 100 ))),
             }
             arrColor.push(newColor);
-            //console.log("%cCOLOR", `color : rgb(${newColor.redCode},${newColor.greenCode}, ${newColor.blueCode})`);
         }
         return arrColor
     }
@@ -137,36 +158,6 @@ const GradientBackground = ({returnData} : Props) => {
                         onClick={() => setCurrentSelect(3)}>
                             {convertRgbToHex(colorInit3)}
                 </button>
-                {/* <button className="btn_color_picker" 
-                        id="btn_color_picker_1" 
-                        style={{backgroundColor:`rgb(${colorInit1.redCode}, ${colorInit1.greenCode}, ${colorInit1.blueCode})`}}
-                        onClick={() => setCurrentSelect((pre) => { 
-                            if(pre.curr !== 1) {
-                                return {curr : 1, show : true};
-                            } 
-                            return {curr : 1, show : !pre.show};
-                        })}>
-                            {`rgb(${colorInit1.greenCode}, ${colorInit1.greenCode}, ${colorInit1.blueCode})`}</button>
-                <button className="btn_color_picker" 
-                        id="btn_color_picker_2" 
-                        style={{backgroundColor:`rgb(${colorInit2.redCode}, ${colorInit2.greenCode}, ${colorInit2.blueCode})`}}
-                        onClick={() => setCurrentSelect((pre) => { 
-                            if(pre.curr !== 2) {
-                                return {curr : 2, show : true};
-                            } 
-                            return {curr : 2, show : !pre.show};
-                        })}>
-                        {`rgb(${colorInit2.greenCode}, ${colorInit2.greenCode}, ${colorInit2.blueCode})`}</button>
-                <button className="btn_color_picker" 
-                        id="btn_color_picker_3"
-                        style={{backgroundColor:`rgb(${colorInit3.redCode}, ${colorInit3.greenCode}, ${colorInit3.blueCode})`}}
-                        onClick={() => setCurrentSelect((pre) => { 
-                            if(pre.curr !== 3) {
-                                return {curr : 3, show : true};
-                            } 
-                            return {curr : 3, show : !pre.show};
-                        })}>
-                            {`rgb(${colorInit3.greenCode}, ${colorInit3.greenCode}, ${colorInit3.blueCode})`}</button> */}
             </div>
             <p className="info-guild">Preview</p>
             <div className="background-preview">
@@ -179,36 +170,6 @@ const GradientBackground = ({returnData} : Props) => {
                 <div className="color_picker_container" id="color_picker_3_div" style={{display : `${currentSelect == 3 ? "block":"none"}`}}>
                     <ColorPicker id="color_picker_3" settings={colorInit3} returnColor={handleSelectColor3} />
                 </div>
-                {/* {(() => {
-                    console.log("render",currentSelect);
-                    let objectData = {
-                        id : "",
-                        colorInit : {redCode : 0, greenCode : 0, blueCode : 0},
-                        handleFunc : ({}) => {}
-                    }
-                    switch (currentSelect.curr) {
-                        case 1 : 
-                            objectData.colorInit = colorInit1;
-                            objectData.id = "color_picker_1";
-                            objectData.handleFunc = handleSelectColor1;
-                            break;
-                        case 2 : 
-                            objectData.colorInit = colorInit2;
-                            objectData.id = "color_picker_2";
-                            objectData.handleFunc = handleSelectColor2;
-                            break
-                        case 3 : 
-                            objectData.colorInit = colorInit3;
-                            objectData.id = "color_picker_3";
-                            objectData.handleFunc = handleSelectColor3;
-                            break;
-                        default : 
-                            break;
-                    }
-
-                    if(currentSelect.show) return  <ColorPicker id={objectData.id} settings={objectData.colorInit} returnColor={objectData.handleFunc} />
-                    return "";
-                })()} */}
             </div>
             <div className="button-action">
             
@@ -218,3 +179,4 @@ const GradientBackground = ({returnData} : Props) => {
 }
 
 export {GradientBackground, Direction};
+export const GradientBackgroundMemoized = React.memo(GradientBackground);

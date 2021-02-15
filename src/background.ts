@@ -1,10 +1,15 @@
 // This file is ran as a background script
-import {MessageType, REQ_SNOW_STATUS, SNOW_RESPONSE,
-        SNOW_TOGGLE, SNOW_CHANGE, GET_CURRENT_NUM_ITEM, SET_NUM_ITEM, 
-        GET_BACKGROUND_DATA,
-        CHANGE_BACKGROUND_DATA, BackgroundData, GET_BACKGROUND_DATA_CONTENT} from "./type";
+import {
+    CHANGE_BACKGROUND_DATA,
+    GET_INITIAL_DATA, 
+    CHANGE_EFFECT_DATA, 
+    GET_INITIAL_DATA_CONTENT} from "./type";
 
-import {sendSnowStatus, sendSnowChange, sendCurrentNumItem, sendDataBackgroundToPopup, sendDataBackgroundChangeToContent} from "./send_data";
+import {
+    sendInitialDataTopPopup,
+    sendChangeEffectToContent,
+    sendChangeBackgroundToContent,
+    sendInitialDataToContent} from "./send_data";
 
 let snowing = false;
 let itemEffect = '';
@@ -12,95 +17,112 @@ let numberItem = 10;
 let dataBackground = {};
 
 
-// Get locally stored value
-chrome.storage.local.get("snowing", (res) => {
-    if(res['snowing']) {
-        snowing = true;
-    } else {
-        snowing = false;
+// Get locally stored value 
+const getSimpleVar = (nameVar : string) => {
+    if(nameVar == 'num_item') {
+        chrome.storage.local.get("num_item", (res) => {
+            if(res['num_item']) {
+                numberItem = res['num_item'];
+            } else {
+                numberItem = 12;
+            }
+        });
+        return numberItem;
     }
-});
-
-chrome.storage.local.get('item_effect', (res) => {
-    if(res['item_effect']) {
-        itemEffect = res['item_effect'];
-    } else {
-        itemEffect = "♥";
+    
+    if(nameVar == 'item_effect') {
+        chrome.storage.local.get('item_effect', (res) => {
+            if(res['item_effect']) {
+                itemEffect = res['item_effect'];
+            } else {
+                itemEffect = "♥";
+            }
+        });
+        return itemEffect;
     }
-});
 
-chrome.storage.local.get("num_item", (res) => {
-    if(res['num_item']) {
-        numberItem = res['num_item'];
+    if(nameVar == 'snowing') {
+        chrome.storage.local.get("snowing", (res) => {
+            if(res['snowing']) {
+                snowing = true;
+            } else {
+                snowing = false;
+            }
+        });
+        return snowing;
     }
-});
 
-chrome.storage.local.get('data_background', (res) => {
-    if(res['data_background']) {
-        dataBackground = res['data_background'];
-    } else {
-        // set default data background
-        dataBackground = {
-            tab : "solid_tab",
-            transparent : 50,
-            active : false,
-            dataColor : null,
-        }    
-    }
-});
+    return null;
+}
 
 
-chrome.runtime.onMessage.addListener((message : MessageType) => {
-    console.log(message); 
+const getDataBg = () => {
+    chrome.storage.local.get('data_background', (res) => {
+        if(res['data_background']) {
+            dataBackground = res['data_background'] && Object.keys(res['data_background']).length === 0 && res['data_background'].constructor === Object ? {} : JSON.parse(res['data_background']);
+        } else {
+            // set default data background
+            dataBackground = {
+                tab : "solid_tab",
+                transparent : 50,
+                active : false,
+                dataColor : null,
+            }    
+        }
+    });
+    return dataBackground;
+}
+
+
+chrome.runtime.onMessage.addListener((message : {type : string, data: any}) => {
+    console.log("Listen for initial data of popup",message);
     switch(message.type) {
-        case REQ_SNOW_STATUS : 
-            sendSnowChange(snowing, itemEffect, SNOW_RESPONSE, numberItem);
-            break;
-        case SNOW_TOGGLE : 
-            snowing = message.snowing;
-            chrome.storage.local.set({snowing: snowing});
-            sendSnowStatus(snowing);
-            break;
-
-        case SNOW_CHANGE : 
-            itemEffect = message.item;
-            snowing = message.snowing;
-            chrome.storage.local.set({item_effect : itemEffect, snowing: snowing});
-            snowing = message.snowing;
-            sendSnowChange(snowing, itemEffect)
-            break;
-        case GET_CURRENT_NUM_ITEM: 
-            sendCurrentNumItem(numberItem, GET_CURRENT_NUM_ITEM, false);
+        case GET_INITIAL_DATA : 
+            let objDataSend = {
+                dataEffect : {
+                    activeEffect : getSimpleVar('snowing'),
+                    currentItem  : getSimpleVar('item_effect'),
+                    numItem      : getSimpleVar('num_item'), 
+                },
+                dataBackground   : getDataBg()
+            }
+            console.log("DATA INIT POPUP", objDataSend);
+            sendInitialDataTopPopup(message.type, objDataSend);
             break;
 
-        case SET_NUM_ITEM : 
-            numberItem = message.num_item;
-            chrome.storage.local.set({num_item : numberItem});
-            sendCurrentNumItem(numberItem, SET_NUM_ITEM, true);
+        case CHANGE_EFFECT_DATA : 
+            let data = message.data;
+            chrome.storage.local.set({
+                snowing : data.activeEffect,
+                item_effect : data.currentItem,
+                num_item : data.numItem
+            });
+
+            sendChangeEffectToContent(message.type ,data);
             break;
-        default : 
+
+        case CHANGE_BACKGROUND_DATA : 
+            console.log("CHANGE BG ", message.data);
+            chrome.storage.local.set({data_background : JSON.stringify(message.data)});
+            sendChangeBackgroundToContent(message.type ,message.data);
+            break;
+        
+        case GET_INITIAL_DATA_CONTENT: 
+            // chuan bi tong hop data can thiet cho content chay
+            let objDataSet = {
+                dataEffect : {
+                    activeEffect : getSimpleVar('snowing'),
+                    currentItem  : getSimpleVar('item_effect'),
+                    numItem      : getSimpleVar('num_item'), 
+                },
+                dataBackground   : getDataBg()
+            }
+            console.log(GET_INITIAL_DATA_CONTENT , objDataSet);
+
+            sendInitialDataToContent(message.type, objDataSet);
+
+            break;
+        default: 
             break;
     }
 });
-
-
-chrome.runtime.onMessage.addListener((message : BackgroundData) => {
-    console.log(message); 
-    switch(message.type) {
-        case GET_BACKGROUND_DATA : 
-            sendDataBackgroundToPopup(GET_BACKGROUND_DATA, dataBackground);
-            break;
-
-        case CHANGE_BACKGROUND_DATA: 
-            let dataBgChange = message.data;
-            chrome.storage.local.set({data_background : dataBgChange});
-            sendDataBackgroundChangeToContent(GET_BACKGROUND_DATA_CONTENT,dataBgChange);
-            break;
-
-        case GET_BACKGROUND_DATA_CONTENT: 
-            sendDataBackgroundChangeToContent(GET_BACKGROUND_DATA_CONTENT, dataBackground);
-            break;
-        default : 
-            break;
-    }
-})

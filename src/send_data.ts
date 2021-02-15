@@ -70,4 +70,46 @@ const sendDataBackgroundChangeToContent = (type : string, data : any) => {
 }
 
 
-export {sendSnowStatus , sendSnowChange, sendCurrentNumItem, sendDataBackgroundToPopup, sendDataBackgroundChangeToContent}
+
+const sendInitialDataTopPopup = (type : string, data : any) => {
+    let message = {
+        type : type,
+        data : data,
+    }
+    chrome.runtime.sendMessage(message);
+}
+
+const sendInitialDataToContent = (type : string, data : any) => {
+    let message = {
+        type : type,
+        data : data,
+    }
+    sendMessageToTab(message);
+} 
+
+const sendChangeEffectToContent = (type : string, data : any) => {
+    let message = {
+        type : type,
+        data : data,
+    }
+    sendMessageToTab(message);
+}
+
+const sendChangeBackgroundToContent = (type : string, data : any) => {
+    let message = {
+        type : type,
+        data : data,
+    }
+    sendMessageToTab(message);
+}
+
+export {
+    sendSnowStatus , 
+    sendSnowChange, 
+    sendCurrentNumItem, 
+    sendDataBackgroundToPopup, 
+    sendDataBackgroundChangeToContent,
+    sendInitialDataTopPopup,
+    sendChangeEffectToContent,
+    sendChangeBackgroundToContent,
+    sendInitialDataToContent}

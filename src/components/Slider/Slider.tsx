@@ -8,39 +8,10 @@ const style =  {
     },
 }
 
-const Slider = () => {
-    const [currNumItem, setCurrNumItem] = React.useState(10);
+const Slider = ({currentVal, handleChangeSliderVal} : 
+    {currentVal : number, handleChangeSliderVal : (...args : [any]) => void}) => {
     const maxItem  = 30;
     const minItem  = 10;
-
-    React.useEffect(()=> {
-        chrome.runtime.sendMessage({type : GET_CURRENT_NUM_ITEM});
-        chrome.runtime.onMessage.addListener((message) => {
-            console.log({from : "Slider Console Log", data : message});
-            switch(message.type) {
-                case GET_CURRENT_NUM_ITEM: 
-                    if(message.num_item) {
-                        setCurrNumItem(message.num_item);
-                    }
-                    break;
-
-                case SET_NUM_ITEM:
-                    if(message.num_item) {
-                        setCurrNumItem(message.num_item);
-                    }
-                    break;
-                default: 
-                    break;
-            };
-        });
-    }, []);
-
-    const setNewNumItem = (numItem : number = 10) => {
-        chrome.runtime.sendMessage({
-            type : SET_NUM_ITEM,
-            num_item : numItem
-        });
-    }
 
     return (
         <div className="slider-container">
@@ -48,9 +19,9 @@ const Slider = () => {
                 <input type="range" className="slider"
                 min={minItem} 
                 max={maxItem} 
-                value={currNumItem} 
+                value={currentVal} 
                 step={1}
-                onChange={(e) => setNewNumItem(parseInt(e.target.value))}/>
+                onChange={(e) => handleChangeSliderVal(parseInt(e.target.value))}/>
             </div>
             <div className="slider-info">
                 <div className="min-val">
@@ -59,7 +30,7 @@ const Slider = () => {
                 </div>
                 <div className="curr-val">
                     <div style={style.smallText}>Curr</div>
-                    <div>{currNumItem}</div>
+                    <div>{currentVal}</div>
                 </div>
                 <div className="max-val">
                     <div style={style.smallText}>Max</div>

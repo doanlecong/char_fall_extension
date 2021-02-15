@@ -4,6 +4,8 @@ const SNOW_RESPONSE : string = "SNOW_STATUS";
 const SNOW_TOGGLE : string = "TOGGLE_SNOW";
 const SNOW_CHANGE : string = "SNOW_CHANGE";
 const GET_EFFECT_ITEM : string = "GET_ITEM_EFFECT";
+const CHANGE_EFFECT_DATA : string = "CHANGE_EFFECT_DATA";
+
 
 // Const about get current effect item to render 
 const GET_CURRENT_NUM_ITEM: string = "GET_CURRENT_NUM_ITEM";
@@ -14,6 +16,14 @@ const SET_NUM_ITEM: string = "SET_NUM_ITEM";
 const GET_BACKGROUND_DATA : string = "GET_BACKGROUND_DATA";
 const CHANGE_BACKGROUND_DATA : string = "CHANGE_BACKGROUND_DATA";
 const GET_BACKGROUND_DATA_CONTENT : string = "GET_BACKGROUND_DATA_CONTENT";
+
+
+// CONSTANT FOR APP WHEN POP UP
+const GET_INITIAL_DATA : string = "GET_INITIAL_DATA_APP";
+
+// CONSTANT FOR CONTENT 
+const GET_INITIAL_DATA_CONTENT : string = "GET_INITIAL_DATA_CONTENT";
+
 
 interface SnowRequest {
     type : "REQ_SNOW_STATUS";
@@ -73,6 +83,7 @@ interface ChangeBackgroundData {
 
 export type MessageType = SnowRequest | SnowResponse | SnowToggle | SnowChange | GetNumberItem;
 export {REQ_SNOW_STATUS, SNOW_RESPONSE, SNOW_TOGGLE, SNOW_CHANGE, GET_EFFECT_ITEM, GET_CURRENT_NUM_ITEM, SET_NUM_ITEM };
+export {CHANGE_EFFECT_DATA, GET_INITIAL_DATA,GET_INITIAL_DATA_CONTENT};
 export type EffectMesType = GetItemEffect | SnowChange;
 export { GET_BACKGROUND_DATA , CHANGE_BACKGROUND_DATA, GET_BACKGROUND_DATA_CONTENT };
 export type BackgroundData = GetDataBackground | ChangeBackgroundData;

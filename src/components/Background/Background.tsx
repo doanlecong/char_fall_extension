@@ -1,4 +1,5 @@
 import * as React from "react";
+import { unstable_batchedUpdates } from "react-dom";
 import { SliderTransparent } from "../Slider";
 import "./background.css";
 import { GradientBackground , Direction} from "./GradientBackground";
@@ -46,18 +47,23 @@ interface DataBackground {
 }
 
 const Background = ({tabSelect, active ,transNum, dataChosen, returnData} : DataBackground) => {
+    const [firstRender, setFirstRender] = React.useState(true);
     const [tabActive, setTabActive] = React.useState(tabSelect ?? "solid_tab");
     const [transparent, setTranspanent] = React.useState(transNum ?? 50);
     const [activeBg, setActiveBg] = React.useState(active ?? false);
     const [dataColorChosen, setDataColorChosen] = React.useState<DataGradient | DataSolid | null | undefined>(dataChosen);
 
     React.useEffect(() => {
+        if(firstRender == true) {setFirstRender(false); return;}
         returnData({tab : tabActive, transparent : transparent, dataColor : dataColorChosen, active : activeBg});
     },[tabActive, dataColorChosen, transparent, activeBg]);
 
     const handleClickTab = (id : string) => {
-        if(id === "solid_tab") {setTabActive(() => "solid_tab")}
-        if(id === "gradient_tab") {setTabActive(() => "gradient_tab")}
+        unstable_batchedUpdates(() => {
+            (tabActive != id) && setDataColorChosen(null);
+            if(id === "solid_tab") {setTabActive(() => "solid_tab")}
+            if(id === "gradient_tab") {setTabActive(() => "gradient_tab")}
+        })
     };
 
     const handleDataSlider = (val:number = 50) => {
@@ -91,8 +97,8 @@ const Background = ({tabSelect, active ,transNum, dataChosen, returnData} : Data
             </div>
             <div className="tab-pane">
                 {tabActive == "solid_tab" ? 
-                    <SolidBackground returnData={handleDataSolid}/> : 
-                    <GradientBackground returnData={handleDataGradient}/>}
+                    <SolidBackground dataChosen={dataColorChosen} returnData={handleDataSolid}/> : 
+                    <GradientBackground dataChosen={dataColorChosen} returnData={handleDataGradient}/>}
             </div>
         </div>
     );
