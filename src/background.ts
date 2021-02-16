@@ -20,7 +20,7 @@ let dataBackground = {};
 // Get locally stored value 
 const getSimpleVar = (nameVar : string) => {
     if(nameVar == 'num_item') {
-        chrome.storage.local.get("num_item", (res) => {
+        chrome.storage.sync.get("num_item", (res) => {
             if(res['num_item']) {
                 numberItem = res['num_item'];
             } else {
@@ -31,7 +31,7 @@ const getSimpleVar = (nameVar : string) => {
     }
     
     if(nameVar == 'item_effect') {
-        chrome.storage.local.get('item_effect', (res) => {
+        chrome.storage.sync.get('item_effect', (res) => {
             if(res['item_effect']) {
                 itemEffect = res['item_effect'];
             } else {
@@ -42,7 +42,7 @@ const getSimpleVar = (nameVar : string) => {
     }
 
     if(nameVar == 'snowing') {
-        chrome.storage.local.get("snowing", (res) => {
+        chrome.storage.sync.get("snowing", (res) => {
             if(res['snowing']) {
                 snowing = true;
             } else {
@@ -57,7 +57,7 @@ const getSimpleVar = (nameVar : string) => {
 
 
 const getDataBg = () => {
-    chrome.storage.local.get('data_background', (res) => {
+    chrome.storage.sync.get('data_background', (res) => {
         if(res['data_background']) {
             dataBackground = res['data_background'] && Object.keys(res['data_background']).length === 0 && res['data_background'].constructor === Object ? {} : JSON.parse(res['data_background']);
         } else {
@@ -92,7 +92,7 @@ chrome.runtime.onMessage.addListener((message : {type : string, data: any}) => {
 
         case CHANGE_EFFECT_DATA : 
             let data = message.data;
-            chrome.storage.local.set({
+            chrome.storage.sync.set({
                 snowing : data.activeEffect,
                 item_effect : data.currentItem,
                 num_item : data.numItem
@@ -103,7 +103,7 @@ chrome.runtime.onMessage.addListener((message : {type : string, data: any}) => {
 
         case CHANGE_BACKGROUND_DATA : 
             console.log("CHANGE BG ", message.data);
-            chrome.storage.local.set({data_background : JSON.stringify(message.data)});
+            chrome.storage.sync.set({data_background : JSON.stringify(message.data)});
             sendChangeBackgroundToContent(message.type ,message.data);
             break;
         
