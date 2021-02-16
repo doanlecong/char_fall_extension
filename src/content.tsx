@@ -6,14 +6,6 @@ import "./content.css";
 import { DataGradient, DataSolid } from "./components/Background";
 import BackgroundContent from "./components/BackgroundContent";
 import {
-  MessageType,
-  REQ_SNOW_STATUS,
-  SNOW_CHANGE,
-  SNOW_RESPONSE,
-  SET_NUM_ITEM, 
-  BackgroundData, 
-  GET_BACKGROUND_DATA, 
-  GET_BACKGROUND_DATA_CONTENT, 
   GET_INITIAL_DATA_CONTENT,
   CHANGE_EFFECT_DATA,
   CHANGE_BACKGROUND_DATA
@@ -74,7 +66,7 @@ const EffectContainer = () => {
     console.log("CONTENT RUNNING !");
     chrome.runtime.sendMessage({type : GET_INITIAL_DATA_CONTENT});
     chrome.runtime.onMessage.addListener((message : {type : string, data :any}) => {
-      console.log(message);
+      //console.log(message);
       switch(message.type) {
         case GET_INITIAL_DATA_CONTENT : 
           let dataRe = message.data;

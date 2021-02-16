@@ -86,7 +86,7 @@ chrome.runtime.onMessage.addListener((message : {type : string, data: any}) => {
                 },
                 dataBackground   : getDataBg()
             }
-            console.log("DATA INIT POPUP", objDataSend);
+            //console.log("DATA INIT POPUP", objDataSend);
             sendInitialDataTopPopup(message.type, objDataSend);
             break;
 
@@ -102,7 +102,7 @@ chrome.runtime.onMessage.addListener((message : {type : string, data: any}) => {
             break;
 
         case CHANGE_BACKGROUND_DATA : 
-            console.log("CHANGE BG ", message.data);
+            //console.log("CHANGE BG ", message.data);
             chrome.storage.sync.set({data_background : JSON.stringify(message.data)});
             sendChangeBackgroundToContent(message.type ,message.data);
             break;
@@ -117,7 +117,7 @@ chrome.runtime.onMessage.addListener((message : {type : string, data: any}) => {
                 },
                 dataBackground   : getDataBg()
             }
-            console.log(GET_INITIAL_DATA_CONTENT , objDataSet);
+            //console.log(GET_INITIAL_DATA_CONTENT , objDataSet);
 
             sendInitialDataToContent(message.type, objDataSet);
 
