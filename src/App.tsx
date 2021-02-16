@@ -157,7 +157,7 @@ const App = () => {
                     returnData={handleReceiveData}/>
         </div>
       </div>
-      <p className="author_p">Author : <b><a className="author" href="https://doanlee.com" target="_blank">Doan Le</a></b></p>
+      <p className="author_p">Author : <b><a className="author" href="https://doanlee.com" target="_blank">DL</a></b></p>
     </>
   );
 };

@@ -1,6 +1,6 @@
 {
-  "name": "Chrome Extension Boilerplate",
-  "description": "Chrome Extension boilerplate created with React Typescript.",
+  "name": "Night Time",
+  "description": "Sometimes you like something dreamy on your browser screen, and also want to make your eyes more comfortable at night. This extension will help you get there. You can use two functions at the same time as well as individually, it's up to you.  ",
   "manifest_version": 2,
   "version": "1.0.0",
   "icons": {
